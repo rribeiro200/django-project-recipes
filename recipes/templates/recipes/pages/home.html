@@ -4,20 +4,18 @@
 
 {% block content %}
         <div class="main-content main-content-list container">
+    
+            {% for recipe in recipes %}
+
+                {% include 'recipes/partials/recipe.html' %}
             
-            {% if recipe.is_published is True %}
-                
-                {% for recipe in recipes %}
-                    {% include 'recipes/partials/recipe.html' %}
-                {% endfor %}
-            
-            {% else %}
-                
+            {% empty %}
+        
                 <div class="center m-y">
-                    <h1>No recipes found here 😢</h1>
+                    <h1>No recipes found here 🥲</h1>
                 </div>
             
-            {% endif %}
-        
+            {% endfor %}
+            
         </div>
 {% endblock content %}

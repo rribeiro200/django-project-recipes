@@ -5,9 +5,9 @@ from django.http import Http404, HttpResponse
 
 # Create your views here.
 def home(request):
-    recipes = get_list_or_404(
-        Recipe.objects.order_by('-id')
-    )
+    recipes = Recipe.objects.filter(
+            is_published=True,
+        ).order_by('-id')
 
     return render(
         request,
