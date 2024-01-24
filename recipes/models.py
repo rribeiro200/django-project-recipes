@@ -1,5 +1,9 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
+from PIL import Image
+
+from projeto import settings
 
 class Category(models.Model):
     name = models.CharField(max_length=65, null=True)
@@ -27,6 +31,34 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True
     )
+
+    @staticmethod
+    def resize_image(original_img, new_width=1280):
+        img_full_path = os.path.join(settings.MEDIA_ROOT, original_img.name)
+        img_pil = Image.open(img_full_path)
+        original_width, original_height = img_pil.size
+        new_height = round((new_width * original_height) / original_width)
+
+        # Se 1280 for maior que a largura da imagem original enviada pelo usuário
+        # Ai fazemos o redimensionamento da imagem
+        # Pois, 1280 é maior, é sinal que o tamanho original da imagem não atingiu o espaço todo a ser preenchido 
+        if not new_width >= original_width:
+            img_pil.close()
+            return
+        new_image = img_pil.resize((new_width, new_height), Image.LANCZOS)
+
+        new_image.save(img_full_path, optime=True, quality=60)
+        img_pil.close()
+
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        max_image_size = 1280
+
+        if self.cover:
+            self.resize_image(self.cover, max_image_size)
+
 
     def __str__(self):
         return self.title
