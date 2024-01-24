@@ -3,11 +3,11 @@ from django.contrib.auth.models import User
 
 class Category(models.Model):
     name = models.CharField(max_length=65, null=True)
-
+    
     def __str__(self):
         return self.name
 
-class Receipe(models.Model):
+class Recipe(models.Model):
     title = models.CharField(max_length=65, null=True)
     description = models.CharField(max_length=165, null=True)
     slug = models.SlugField(null=True)
@@ -20,12 +20,12 @@ class Receipe(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
     is_published = models.BooleanField(default=False, null=True)
-    cover = models.ImageField(upload_to='recipes/covers/%Y/%m/%d', null=True)
+    cover = models.ImageField(upload_to='recipes/covers/%Y/%m/%d', null=True, blank=True)
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True
+        Category, on_delete=models.SET_NULL, null=True, blank=True, default=None
     )
     author = models.ForeignKey(
-        User, on_delete=models.SET_NULL, null=True
+        User, on_delete=models.SET_NULL, null=True, blank=True
     )
 
     def __str__(self):
