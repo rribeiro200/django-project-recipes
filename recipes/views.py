@@ -25,7 +25,7 @@ def category(request, category_id):
             is_published=True
         ).order_by('-id')
     )
-    category_name = recipes[0].category.name
+    category_name = recipes[0].category.name  # type: ignore
 
     return render(
         request,
