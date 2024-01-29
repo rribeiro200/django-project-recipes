@@ -1,5 +1,7 @@
 from django.core.paginator import Paginator
 import math
+import string as s
+from random import SystemRandom as sr
 
 def make_pagination_range(
     page_range,
@@ -50,7 +52,9 @@ def make_pagination(request, queryset, per_page, qty_pages=4):
         qty_pages,
         current_page # Pega a página atual através do QuerySearch do GET na página
     )
-
-    print(page_obj)
-    print(pagination_range)
+    
     return page_obj, pagination_range
+
+def generate_secret_key():
+    secret_key = ''.join(sr().choices(s.ascii_letters + s.punctuation, k=64))
+    return secret_key

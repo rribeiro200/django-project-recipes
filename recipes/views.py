@@ -5,6 +5,9 @@ from recipes.models import Recipe, Category
 from django.http import Http404, HttpResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
+import os
+
+PER_PAGE = int(os.environ.get('PER_PAGE', 9))
 
 # Create your views here.
 def home(request):
@@ -12,7 +15,7 @@ def home(request):
             is_published=True,
         ).order_by('-id')
     
-    page_obj, pagination_range = make_pagination(request, recipes, 5)
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
 
     return render(
         request,
@@ -33,7 +36,7 @@ def category(request, category_id):
     )
     category_name = recipes[0].category.name  # type: ignore
 
-    page_obj, pagination_range = make_pagination(request, recipes, 5)
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
 
     return render(
         request,
@@ -77,7 +80,7 @@ def search(request):
         is_published=True,
     ).order_by('-id')
 
-    page_obj, pagination_range = make_pagination(request, recipes, 5)
+    page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
 
     return render(request, 'recipes/pages/search.html',
         {
