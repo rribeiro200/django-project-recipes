@@ -8,7 +8,10 @@
 
 <body>
     {% include 'recipes/partials/header.html' %}
-    {% include 'recipes/partials/search.html'%}
+    
+    {% block search_bar %}
+        {% include 'recipes/partials/search.html'%}
+    {% endblock search_bar %}
 
     <main class="main-content-container">
         {% block content %}{% endblock content %}
