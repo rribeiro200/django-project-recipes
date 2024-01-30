@@ -5,6 +5,7 @@ from recipes.models import Recipe, Category
 from django.http import Http404, HttpResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.contrib import messages
 import os
 
 PER_PAGE = int(os.environ.get('PER_PAGE', 9))
@@ -16,6 +17,10 @@ def home(request):
         ).order_by('-id')
     
     page_obj, pagination_range = make_pagination(request, recipes, PER_PAGE)
+
+    messages.error(request, 'QUE LEGAL, FOI UM SUCESSO!!!')
+    messages.success(request, 'QUE LEGAL, FOI UM SUCESSO!!!')
+    messages.info(request, 'QUE LEGAL, FOI UM SUCESSO!!!')
 
     return render(
         request,
