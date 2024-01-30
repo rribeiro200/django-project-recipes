@@ -15,6 +15,7 @@ def add_placeholder(field, placeholder_val):
 class RegisterForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        
         add_placeholder(self.fields['username'], 'Your username')
         add_placeholder(self.fields['email'], 'Your e-mail')
         add_attr(self.fields['username'], 'css', 'a-css-class')
@@ -102,6 +103,7 @@ class RegisterForm(forms.ModelForm):
                 'Password and password2 must be equal',
                 code='invalid'
             )
+
             raise ValidationError({
                 'password': password_confirmation_error,
                 'password2': [

@@ -5,13 +5,10 @@ from pprint import pprint
 
 # Create your views here.
 def register_view(request):
-    print('Dados do formulário armazendos na sessão: ')
-    pprint(request.session['register_form_data'])
     register_form_data = request.session.get('register_form_data', None)
     form = RegisterForm(register_form_data)
     
     # for field in form:
-    # ...
 
     return render(request, 'authors/pages/register_view.html',
         {
