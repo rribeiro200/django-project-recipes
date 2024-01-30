@@ -3,41 +3,44 @@
 {% block title %}Register | {% endblock title %}
 
 {% block content %}
-    {% block search_bar %}{% endblock search_bar %}
+  <div class="main-content center container">
+    <h2>Register {{ request.session.number }}</h2>
+  </div>
 
-    <div class="main-content center container" style="margin-top:50px;">
-        <h2>Register</h2>
-    </div>
+  <div class="main-content container">
+    <form action="{% url 'authors:create' %}" method="POST">
+      {% csrf_token %}
 
-    <div class="main-content container">
-    
-        <form action="{% url 'authors:create'%}" method="POST">
-            {% csrf_token %}
+      <div class="form-content form-content-grid">
+        {% for field in form %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{field}}
 
-            <div class="form-content form-content-grid">
+            {% if field.help_text %}
+              <p class="help-text">{{ field.help_text }}</p>
+            {% endif %}
 
-                {% for field in form %}
-                    <div class="form-group">
-                        <label for="{{ field.id_for_label }}"> {{ field.label }} </label>
-                        {{ field }}
-                    </div>
+            {{ field.errors }}
+          </div>
+        {% endfor %}
+      </div>
 
-                    {% if field.help_text %}
-                        <p class="help-text"> {{ field.help_text }} </p>
-                    {% endif %}
+      {% if form.errors %}
+      <div class="form-content form-content-grid">
+        <div class="form-group">
+          <div class="message message-error">
+            There are errors in the form, please fix them and send again.
+          </div>
+        </div>
+      </div>
+      {% endif %}
 
-                    {{ field.errors }}
-                {% endfor %}
-            
-            </div>
-            
-            <div class="form-content form-content-grid">
-                <div class="form-group">
-                    <button type="submit">Send</button>
-                </div>
-            </div>
-        </form>
-
-    </div>
-
+      <div class="form-content form-content-grid">
+        <div class="form-group">
+          <button type="submit">Send</button>
+        </div>
+      </div>
+    </form>
+  </div>
 {% endblock content %}
