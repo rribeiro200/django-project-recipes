@@ -57,7 +57,7 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
             'username': 'user',
             'first_name': 'first',
             'last_name': 'last',
-            'email': 'email@anyemail.com',
+            'email': 'email@rafaelribdev.com',
             'password': 'Str0ngP@ssword1',
             'password2': 'Str0ngP@ssword2',
         }
@@ -126,3 +126,23 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
 
         # Se o teste passar, é sinal que foi lançado o status code -> 404
         self.assertEqual(response.status_code, 404)
+
+    def test_email_field_must_be_unique(self):
+        url = reverse('authors:create')
+
+        form_test = {
+            'username': 'user1',
+            'first_name': 'first1',
+            'last_name': 'last1',
+            'email': 'email@anyemail.com',
+            'password': 'Abc@12345',
+            'password2': 'Abc@12345',
+ 
+        }
+        
+        self.client.post(url, data=form_test, follow=True)
+        response = self.client.post(url, data=form_test, follow=True)
+
+        validation_error = 'User e-mail is already in use'
+
+        self.assertIn(validation_error, response.context['form'].errors.get('email'))
