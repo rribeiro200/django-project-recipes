@@ -89,7 +89,7 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         self.assertIn(msg_error, response.context['form'].errors.get('username'))
 
     def test_username_field_max_length_should_be_150(self):
-        self.form_data['username'] = 'A' * 147
+        self.form_data['username'] = 'A' * 151
         url = reverse('authors:create')
         response = self.client.post(url, data=self.form_data, follow=True)
 
@@ -98,7 +98,7 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         self.assertIn(msg_error, response.context['form'].errors.get('username'))
 
     def test_password_field_have_lower_upper_case_letters_and_numbers(self):
-        self.form_data['password'] = 'Abc12345678'
+        self.form_data['password'] = 'Aeqwq'
         url = reverse('authors:create')
         response = self.client.post(url, data=self.form_data, follow=True)
 
@@ -115,7 +115,14 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         url = reverse('authors:create')
         response = self.client.post(url, data=self.form_data, follow=True)
 
-        # Se o teste passar, é sinal de que houve este erro no campo password2
+        # Se o teste passar, é sinal de que este erro foi lançado no campo -> password2
         msg_error = 'Password and password2 must be equal'
 
         self.assertIn(msg_error, response.context['form'].errors.get('password2'))
+
+    def test_send_get_request_to_registration_creation_view_returns_404(self):
+        url = reverse('authors:create')
+        response = self.client.get(url)
+
+        # Se o teste passar, é sinal que foi lançado o status code -> 404
+        self.assertEqual(response.status_code, 404)
