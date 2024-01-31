@@ -40,6 +40,14 @@ class RegisterForm(forms.ModelForm):
     password = forms.CharField(
         required=True,
         widget=forms.PasswordInput(),
+        error_messages={
+            'required': 'Password mus not be empty'
+        },
+        help_text=(
+            'Password must have at least one uppercase letter, '
+            'one lowercase letter and one number. The length should be'
+            'at least 8 characteres'
+        ),
         validators=[strong_password]
     )
 
