@@ -96,3 +96,26 @@ class AuthorRegisterFormIntegrationTest(DjangoTestCase):
         msg_error = 'The username must be a maximum of 150 characters.'
 
         self.assertIn(msg_error, response.context['form'].errors.get('username'))
+
+    def test_password_field_have_lower_upper_case_letters_and_numbers(self):
+        self.form_data['password'] = 'Abc12345678'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+
+        msg_error = (
+            'Password must have at least one uppercase letter, '
+            'one lowercase letter and one number.  The length should be'
+            'at least 8 characters'
+        )
+        self.assertIn(msg_error, response.context['form'].errors.get('password'))
+
+    def test_password_and_password_confirmation_are_equal(self):
+        self.form_data['password'] = 'Abc12345678'
+        self.form_data['password2'] = 'Abc12345678AAAA'
+        url = reverse('authors:create')
+        response = self.client.post(url, data=self.form_data, follow=True)
+
+        # Se o teste passar, é sinal de que houve este erro no campo password2
+        msg_error = 'Password and password2 must be equal'
+
+        self.assertIn(msg_error, response.context['form'].errors.get('password2'))
