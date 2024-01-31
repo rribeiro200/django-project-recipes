@@ -37,8 +37,23 @@ class RegisterForm(forms.ModelForm):
         add_placeholder(self.fields['password'], 'Type your password')
         add_placeholder(self.fields['password2'], 'Repeat your password')
         
+    first_name = forms.CharField(
+        error_messages={'required': 'Write your first name'},
+        label='First name'
+    )
+
+    last_name = forms.CharField(
+        error_messages={'required': 'Write your last name'},
+        label='Last name'
+    )
+
+    email = forms.EmailField(
+        error_messages={'required': 'E-mail is required'},
+        label='E-mail',
+        help_text='The e-mail must be valid'
+    )
+    
     password = forms.CharField(
-        required=True,
         widget=forms.PasswordInput(),
         error_messages={
             'required': 'Password mus not be empty'
@@ -48,12 +63,14 @@ class RegisterForm(forms.ModelForm):
             'one lowercase letter and one number. The length should be'
             'at least 8 characteres'
         ),
-        validators=[strong_password]
+        validators=[strong_password],
+        label='Password'
     )
 
+    # Error message is created in the clean method below
     password2 = forms.CharField(
-        required=True,
-        widget=forms.PasswordInput()
+        widget=forms.PasswordInput(),
+        label='Password 2'
     )
 
     class Meta:
@@ -65,21 +82,6 @@ class RegisterForm(forms.ModelForm):
             'email',
             'password',
         ]
-        labels = {
-            'username': 'Username',
-            'first_name': 'First name',
-            'last_name': 'Last name',
-            'email': 'E-mail',
-            'password': 'Password',
-        }
-        help_texts = {
-            'email': 'The e-mail must be valid.',
-        }
-        error_messages = {
-            'username': {
-                'required': 'This field must not be empty',
-            }
-        } 
     
     def clean_password(self):
         data = self.cleaned_data.get('password')
