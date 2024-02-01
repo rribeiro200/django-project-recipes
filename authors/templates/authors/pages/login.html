@@ -1,0 +1,15 @@
+{% extends 'global/base.html' %}
+
+{% block title %}Login | {% endblock title %}
+
+{% block content %}
+  {% block search_bar %}{% endblock search_bar %}
+
+  <div class="main-content center container" style="margin-top: 50px;">
+    <h2>Login</h2>
+  </div>
+
+  {% include 'global/partials/messages.html'%}
+  {% include 'global/partials/form.html'%}
+  
+{% endblock content %}
