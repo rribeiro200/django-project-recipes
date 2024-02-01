@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from authors.forms import RegisterForm, LoginForm
 from pprint import pprint
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -54,8 +54,6 @@ def login_view(request):
 
 
 def login_create(request):
-    if not request.POST:
-        raise Http404()
     
     form = LoginForm(request.POST)
     login_url = reverse('authors:login')
@@ -80,7 +78,10 @@ def login_create(request):
 
 @login_required(login_url='authors:login', redirect_field_name='next') # Precisa estar logado para que a view funcione.
 def logout_view(request):
-
-    logout(request)
+    if not request.POST:
+        raise Http404()
     
-    return redirect(reverse('authors:login'))
+    if request.POST.get('username') != request.user.username:
+        return redirect(reverse('authors:login'))
+    
+    return redirect(reverse('authors:login'))  

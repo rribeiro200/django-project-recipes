@@ -349,6 +349,19 @@ h6 {
   color: var(--color-white);
 }
 
+.plaintext-button {
+  display: inline;
+  border: None;
+  background: None;
+  cursor: pointer;
+  color: var(--color-primary)
+}
+
+.inline-form {
+  display: inline;
+}
+
+
 /* Messages */
 .messages-container {
   display: flex;
