@@ -5,6 +5,7 @@ from authors.forms import RegisterForm, LoginForm
 from pprint import pprint
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def register_view(request):
@@ -33,9 +34,10 @@ def register_create(request):
         user.set_password(user.password) # Salva um password criptografado no BD
         user.save()
 
-        messages.success(request, 'Yor user is created, please log in.')
+        messages.success(request, 'Yor user is created! Please log in.')
 
         del(request.session['register_form_data'])
+        return redirect('authors:login')
 
     return redirect('authors:register')
 
@@ -66,11 +68,19 @@ def login_create(request):
         )
 
         if authenticated_user is not None:
-            messages.success(request, 'You are logged in.')
+            messages.success(request, 'Login successfully!')
             login(request, authenticated_user) 
         else:
-            messages.error(request, 'Invalid credentials')
+            messages.error(request, 'Invalid credentials.')
     else:
-        messages.error(request, 'Error to validate form data')
+        messages.error(request, 'Error to validate form data.')
 
     return redirect(login_url)
+
+
+@login_required(login_url='authors:login', redirect_field_name='next') # Precisa estar logado para que a view funcione.
+def logout_view(request):
+
+    logout(request)
+    
+    return redirect(reverse('authors:login'))
