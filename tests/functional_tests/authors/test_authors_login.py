@@ -60,3 +60,25 @@ class AuthorLoginTest(AuthorsBaseTest):
 
         # Vê mensagem de erro na tela
         self.assertIn('Error to validate form data.', body)
+
+    def test_form_login_invalid_credentials(self):
+        # Abre a página de login
+        self.browser.get(self.live_server_url + reverse('authors:login'))
+
+        # Obtendo o form
+        form = self.browser.find_element(By.CLASS_NAME, 'main-form')
+
+        # Enviando valores inválidos - dados que nao correspondem à o que tem na base
+        username = self.get_by_placeholder(form, 'Type your username')
+        password = self.get_by_placeholder(form, 'Type your password')
+        username.send_keys('invalid_user')
+        password.send_keys('invalid_password')
+
+        # Enviando o form
+        form.submit()
+
+        # Pegando o texto da página
+        body = self.browser.find_element(By.TAG_NAME, 'body').text
+
+        # Vê mensagem de erro na tela
+        self.assertIn('Invalid credentials.', body)
