@@ -1,19 +1,13 @@
-from __future__ import annotations
+import pytest
 from .base import AuthorsBaseTest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
+@pytest.mark.functional_test
 class AuthorsRegisterTest(AuthorsBaseTest):
-    # Pegando o espaço reservado de um campo
-    def get_by_placeholder(self, web_element, placeholder):
-        return web_element.find_element(
-            By.XPATH, f'//input[@placeholder="{placeholder}"]'
-        )
-    
     # Preenchendo form com dados fakes inválidos
     def fill_form_dummy_data(self, form):
         fields = form.find_elements(By.TAG_NAME, 'input') # Pegando todos os campos do form
-
         # Para cada campo exibido no form, insere espaços para gerar erros
         for field in fields:
             if field.is_displayed():
@@ -22,7 +16,7 @@ class AuthorsRegisterTest(AuthorsBaseTest):
     # Obtém o formulário
     def get_form(self):
         return self.browser.find_element(By.XPATH, 'html/body/main/div[2]/form')
-
+    
     def form_field_test_with_callback(self, callback):
         # Acessa a url de registro de authors
         self.browser.get(self.live_server_url + '/authors/register')
