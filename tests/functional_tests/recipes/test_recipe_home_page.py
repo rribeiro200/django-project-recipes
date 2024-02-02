@@ -1,12 +1,14 @@
 import pytest
+from typing import List
 from .base import RecipeBaseFunctionalTest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from unittest.mock import patch
+from recipes.models import Recipe
 
 @pytest.mark.functional_test
 class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
-    def test_recipe_home_page_without_recipes_not_found_message(self):
+    def test_recipe_home_page_without_recipes_not_found_message(self) -> None:
         self.make_recipe_in_batch(qtd=5)
         self.browser.get(self.live_server_url)  # Acessa a minha própria aplicação
         body = self.browser.find_element(By.TAG_NAME, 'body') # Procura elemento HTML no navegador
@@ -15,10 +17,10 @@ class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
 
 
     @patch('recipes.views.PER_PAGE', new=2)
-    def test_recipe_search_input_can_find_correct_recipes(self):
-        recipes = self.make_recipe_in_batch(10)
+    def test_recipe_search_input_can_find_correct_recipes(self) -> None:
+        recipes: List[Recipe] = self.make_recipe_in_batch(10)
 
-        title_needed = 'This is what I need'
+        title_needed: str = 'This is what I need'
 
         recipes[0].title = title_needed
         recipes[0].save()
@@ -42,4 +44,25 @@ class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
             title_needed,
             self.browser.find_element(By.CLASS_NAME, 'main-content-list').text,
         )
+        self.sleep(10)
+
+    @patch('recipes.views.PER_PAGE', new=2)
+    def test_home_page_pagination(self):
+        self.make_recipe_in_batch()
+
+        # Usuário abre a página
+        self.browser.get(self.live_server_url)
+
+        # Vê que tem uma paginação e clica na página 2
+        page2 = self.browser.find_element(
+            By.XPATH,
+            '//a[@aria-label="Go to page 2"]'
+        )
+        page2.click()
+
+        length_elements_list = len(self.browser.find_elements(By.CLASS_NAME, 'recipe'))
+
+        # Vê que tem mais 2 receitas na página 2
+        self.assertEqual(length_elements_list, 2)
+
         self.sleep(10)
