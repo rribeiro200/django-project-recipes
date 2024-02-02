@@ -78,10 +78,17 @@ def login_create(request):
 
 @login_required(login_url='authors:login', redirect_field_name='next') # Precisa estar logado para que a view funcione.
 def logout_view(request):
+    # Tentativa de logout sem estar logado, ou por meio de GET, gera mensagem de erro e Http404
     if not request.POST:
+        messages.error(request, 'Invalid logout request')
         raise Http404()
     
+    # Redireciona o usuário que tente fazer logout com credenciais diferentes das do usuário atualmente autenticado
     if request.POST.get('username') != request.user.username:
+        messages.error(request, 'Invalid logout user')
         return redirect(reverse('authors:login'))
     
+    # Se estiver tudo válido, mostra mensagem de logout feito com sucesso
+    messages.success(request, 'Logged out successfully')
+
     return redirect(reverse('authors:login'))  
