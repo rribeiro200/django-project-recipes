@@ -60,9 +60,10 @@ class RecipeHomePageFunctionalTest(RecipeBaseFunctionalTest):
         )
         page2.click()
 
-        length_elements_list = len(self.browser.find_elements(By.CLASS_NAME, 'recipe'))
+        # Verifica quantos elementos tem na página 2 (depois do click no link que leva até ela.)
+        element_list_length = len(self.browser.find_elements(By.CLASS_NAME, 'recipe'))
 
         # Vê que tem mais 2 receitas na página 2
-        self.assertEqual(length_elements_list, 2)
+        self.assertEqual(element_list_length, 2)
 
         self.sleep(10)
