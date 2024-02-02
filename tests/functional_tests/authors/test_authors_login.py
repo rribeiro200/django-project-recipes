@@ -33,8 +33,30 @@ class AuthorLoginTest(AuthorsBaseTest):
         self.assertIn('Login successfully!', body)
 
     def test_login_create_raises_404_if_not_POST_method(self):
-        url = self.browser.get(self.live_server_url + reverse('authors:login_create'))
+        self.browser.get(self.live_server_url + reverse('authors:login_create'))
 
         body = self.browser.find_element(By.TAG_NAME, 'body').text
 
-        self.assertIn('Not found', body)
+        self.assertIn('Not Found', body) 
+
+    def test_form_login_is_invalid(self):
+        # Abre a página de login
+        self.browser.get(self.live_server_url + reverse('authors:login'))
+
+        # Obtendo o form
+        form = self.browser.find_element(By.CLASS_NAME, 'main-form')
+
+        # Enviando valores inválidos (vazios) nos campos obtidos
+        username = self.get_by_placeholder(form, 'Type your username')
+        password = self.get_by_placeholder(form, 'Type your password')
+        username.send_keys(' ')
+        password.send_keys(' ')
+
+        # Enviando o form
+        form.submit()
+
+        # Pegando o texto da página
+        body = self.browser.find_element(By.TAG_NAME, 'body').text
+
+        # Vê mensagem de erro na tela
+        self.assertIn('Error to validate form data.', body)
