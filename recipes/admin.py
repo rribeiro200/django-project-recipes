@@ -14,6 +14,9 @@ class RecipeAdmin(admin.ModelAdmin):
     list_per_page = 10
     list_editable = 'is_published',
     ordering = '-id',
+    prepopulated_fields = { # Campos pré-preenchidos - SLUG preenchido de acordo com o TITLE
+        "slug": ('title',)
+    }
 
 
 admin.site.register(Category, CategoryAdmin)
