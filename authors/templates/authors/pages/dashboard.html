@@ -20,11 +20,20 @@
           <li>
             <!-- Ao clicar no título da receita, redireciona para página de edição dela -->
             <a href="{% url 'authors:dashboard_recipe_edit' recipe.id %}"> {{ recipe.title }} </a>
+            
             <!-- Deletar receitas -->
-            <form action="{% url 'authors:dashboard_recipe_delete' recipe.id %}" class="inline-form form-delete" method="POST">
-              {% csrf_token %}
-              <button class="plaintext-button" type="submit">❌</button>
-            </form>
+              <form action="{% url 'authors:dashboard_recipe_delete' %}" class="inline-form form-delete" method="POST">
+                
+                {% csrf_token %}
+                
+                <!-- Campo escondido recebe o id da receita no loop atual em específico-->
+                <input type="hidden" name="id" value="{{ recipe.id }}">
+                
+                <button class="plaintext-button" type="submit">❌</button>
+              
+              </form>
+            <!-- Deletar receitas -->
+
           </li>
         {% empty %}
           <li>

@@ -20,7 +20,6 @@ def register_view(request):
         }
     )
 
-
 # View responsável somente por TRATAR os DADOS do FORMULÁRIO
 def register_create(request):
     if not request.POST:
@@ -42,7 +41,6 @@ def register_create(request):
 
     return redirect('authors:register')
 
-
 def login_view(request):
     form = LoginForm()
 
@@ -52,7 +50,6 @@ def login_view(request):
             'form_action': reverse('authors:login_create')
         }
     )
-
 
 def login_create(request):
     
@@ -76,7 +73,6 @@ def login_create(request):
 
     return redirect(reverse('authors:dashboard'))
 
-
 @login_required(login_url='authors:login', redirect_field_name='next') # Precisa estar logado para que a view funcione.
 def logout_view(request):
     # Tentativa de logout sem estar logado, ou por meio de GET, gera mensagem de erro e Http404
@@ -98,7 +94,6 @@ def logout_view(request):
 
     return redirect(reverse('authors:login'))
 
-
 # View dashboard - área admin do autor
 @login_required(login_url='authors:login', redirect_field_name='next')
 def dashboard(request):
@@ -113,7 +108,6 @@ def dashboard(request):
             'recipes': recipes,
         }
     )
-
 
 # View para edição da receita
 @login_required(login_url='authors:login', redirect_field_name='next')
@@ -159,7 +153,6 @@ def dashboard_recipe_edit(request, id):
         }
     )
 
-
 # View para criação de nova receita
 @login_required(login_url='authors:login', redirect_field_name='next')
 def dashboard_recipe_create(request):
@@ -189,15 +182,21 @@ def dashboard_recipe_create(request):
         }              
     )
 
-
 # View para deleção de receita
 @login_required(login_url='authors:login', redirect_field_name='next')
-def dashboard_recipe_delete(request, id):
+def dashboard_recipe_delete(request):
+    # Requisição só pode ser POST, caso contrário enviará erros para usuário
+    if not request.POST:
+        raise Http404
+    
+    # Pegando ID da receita a ser deletada
+    recipe_id = request.POST.get('id')
+
     # Busca a receita especifica
     recipe = Recipe.objects.filter(
         is_published=False,
         author=request.user,
-        pk=id
+        pk=recipe_id
     ).first()
 
     if not recipe: # Se não encontrar a receita, lança um 404
