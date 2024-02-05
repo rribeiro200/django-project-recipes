@@ -8,6 +8,8 @@
     <h2>Dashboard ({{ user }})</h2>
     <!-- Mensagem informativa de login e link para logout do usuário -->
     {% include 'authors/partials/login_message.html'%}
+    <!-- Incluindo mensagens de feedback -->
+    {% include 'global/partials/messages.html'%}
 
     <!-- Exibição das receitas do usuário logado -->
     <div class="authors-dashboard-container">
@@ -18,6 +20,11 @@
           <li>
             <!-- Ao clicar no título da receita, redireciona para página de edição dela -->
             <a href="{% url 'authors:dashboard_recipe_edit' recipe.id %}"> {{ recipe.title }} </a>
+            <!-- Deletar receitas -->
+            <form action="{% url 'authors:dashboard_recipe_delete' recipe.id %}" class="inline-form form-delete" method="POST">
+              {% csrf_token %}
+              <button class="plaintext-button" type="submit">❌</button>
+            </form>
           </li>
         {% empty %}
           <li>
@@ -28,8 +35,4 @@
 
     </div>
   </div>
-
-  <!-- Incluindo mensagens de feedback -->
-  {% include 'global/partials/messages.html'%}
-  
 {% endblock content %}

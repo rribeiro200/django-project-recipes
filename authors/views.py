@@ -188,3 +188,22 @@ def dashboard_recipe_create(request):
             'form': form
         }              
     )
+
+
+# View para deleção de receita
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard_recipe_delete(request, id):
+    # Busca a receita especifica
+    recipe = Recipe.objects.filter(
+        is_published=False,
+        author=request.user,
+        pk=id
+    ).first()
+
+    if not recipe: # Se não encontrar a receita, lança um 404
+        raise Http404
+    
+    recipe.delete() # Se encontrar a receita, deleta.
+    messages.success(request, 'Deleted successfuly!') # Feedback para usuário, receita deletada!
+
+    return redirect(reverse('authors:dashboard')) # Após a ação, usuário volta para dashboard 
