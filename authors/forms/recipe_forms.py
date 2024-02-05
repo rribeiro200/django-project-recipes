@@ -9,11 +9,31 @@ class AuthorRecipeForm(forms.ModelForm):
 
         # Estilizando diretamente campos do formulário
         add_attr(self.fields.get('preparation_steps'), 'class', 'span-2')
-        add_attr(self.fields.get('cover'), 'class', 'span-2')
 
     class Meta: # Configurações adicionais deste formulário - metadados
         model = Recipe # Modelo que o formulário está associado
-        fields = ('title', 
+        fields = ('title',  # Quais campos do modelo serão incluídos no formulário 
                   'description', 'preparation_time', 'preparation_time_unit',
                   'servings', 'servings_unit', 'preparation_steps','cover',
-        ) # Quais campos do modelo serão incluídos no formulário
+        )
+        # Customização e comportamento do elemento (campos do form) para interface de usuário
+        widgets = { 
+            'cover': forms.FileInput( # Widget usado para campos de arquivo
+                attrs={
+                    'class': 'span-2'
+                }
+            ),
+            'servings_unit': forms.Select( # Widget usado para campos de escolha
+                choices=( # Escolhas
+                    ('Porções', 'Porções'),
+                    ('Pedaços', 'Pedaços'),
+                    ('Pessoas', 'Pessoas'),
+                )
+            ),
+            'preparation_time_unit': forms.Select( # Widget usado para campos de escolha
+                choices=( # Escolhas
+                    ('Minutos', 'Minutos'),
+                    ('Horas', 'Horas'),
+                )
+            )
+        }

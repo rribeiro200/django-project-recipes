@@ -1,7 +1,16 @@
+<!-- 
+  Este bloco de template exibe mensagens diferentes com base no estado de autenticação do usuário.
+
+  Quando o usuário está autenticado:
+  - Mostra uma mensagem personalizada de boas-vindas com o nome de usuário.
+  - Fornece um link para visualizar as receitas do usuário na dashboard do autor.
+  - Oferece a opção de fazer logout.
+-->
+
 {% if request.user.is_authenticated %}
       <div class="login-message">
         You are logged in with <strong>{{ request.user.username }}</strong>.
-        Please, 
+        <a href="{% url 'authors:dashboard' %}">See your recipes</a> or, 
         <form class="inline-form" action="{% url 'authors:logout'%}" method="POST">
           {% csrf_token %}
           <input type="hidden" name="username" value="{{ request.user.username }}">
@@ -9,4 +18,4 @@
         </form>
         to logout
       </div>
-    {% endif %}
+{% endif %}

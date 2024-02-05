@@ -16,6 +16,7 @@
       <ul>
         {% for recipe in recipes %}
           <li>
+            <!-- Ao clicar no título da receita, redireciona para página de edição dela -->
             <a href="{% url 'authors:dashboard_recipe_edit' recipe.id %}"> {{ recipe.title }} </a>
           </li>
         {% empty %}

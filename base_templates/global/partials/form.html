@@ -15,6 +15,14 @@
 
                 {{ field.errors }}
             </div>
+
+            <!-- Exibindo a IMAGEM da receita na tela -->
+            {% if field.name == 'cover' and field.value.url %}
+            <div class="span-2">
+                <img src="{{ field.value.url }}" alt="Capa para {{ recipe.title }}">
+            </div>
+            {% endif %}
+
             {% endfor %}
         </div>
 
