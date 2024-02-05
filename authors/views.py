@@ -6,6 +6,7 @@ from pprint import pprint
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from recipes.models import Recipe
 
 # Create your views here.
 def register_view(request):
@@ -91,10 +92,24 @@ def logout_view(request):
     # Se estiver tudo válido, mostra mensagem de logout feito com sucesso
     messages.success(request, 'Logged out successfully')
 
+    # Remove a identificação do usuário autenticado do objeto request e 
+    # também remove os dados da sessão associados a esse usuário. O usuário é "desconectado" do sistema.
+    logout(request)
+
     return redirect(reverse('authors:login'))
 
 
 # View dashboard - área admin do autor
 @login_required(login_url='authors:login', redirect_field_name='next')
 def dashboard(request):
-    return render(request, 'authors/pages/dashboard.html')
+    # Pegando receitas de um usuário específico e não publicadas
+    recipes = Recipe.objects.filter(
+        is_published=False, # Receitas não publicadas.
+        author=request.user # Dono da receita deve ser o mesmo que está logado no site
+    )
+
+    return render(request, 'authors/pages/dashboard.html', 
+        {
+            'recipes': recipes,
+        }
+    )

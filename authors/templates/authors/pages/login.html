@@ -7,10 +7,16 @@
 
   <div class="main-content center container" style="margin-top: 50px;">
     <h2>Login</h2>
+    <!-- Mensagem descritiva de usuário logado e link para logout -->
     {% include 'authors/partials/login_message.html'%}
   </div>
 
+  <!-- Incluindo mensagens de feedback para usuário neste template -->
   {% include 'global/partials/messages.html'%}
-  {% include 'global/partials/form.html'%}
   
+  <!-- Mostra o FORM se usuário não estiver authenticado -->
+  {% if not user.is_authenticated %}
+    {% include 'global/partials/form.html' %}
+  {% endif %}
+
 {% endblock content %}

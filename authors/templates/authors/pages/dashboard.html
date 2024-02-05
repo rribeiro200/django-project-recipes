@@ -3,14 +3,32 @@
 {% block title %}Dashboard ({{ user }}) | {% endblock title %}
 
 {% block content %}
-  
-  {% block search_bar %}{% endblock search_bar %}
 
   <div class="main-content center container" style="margin-top: 50px;">
     <h2>Dashboard ({{ user }})</h2>
+    <!-- Mensagem informativa de login e link para logout do usuário -->
     {% include 'authors/partials/login_message.html'%}
+
+    <div class="authors-dashboard-container">
+      <h3>Your recipes</h3>
+
+      <!-- Exibição das receitas do usuário logado -->
+      <ul>
+        {% for recipe in recipes %}
+          <li>
+            <a href="#"> {{ recipe.title }} </a>
+          </li>
+        {% empty %}
+          <li>
+            <p>You do not have recipes, please create one.</p>
+          </li>
+        {% endfor %}
+      </ul>
+
+    </div>
   </div>
 
+  <!-- Incluindo mensagens de feedback -->
   {% include 'global/partials/messages.html'%}
   
 {% endblock content %}
