@@ -132,7 +132,7 @@ def dashboard_recipe_edit(request, id):
     
     # Formulário recebendo dados para atualização
     form = AuthorRecipeForm(
-        request.POST or None,
+        request.POST or None, # Form recebe dados postados pelo usuário
         instance=recipe.first() # Pré-preenche os campos do formulário com os valores existentes da instância específica.
     )
 
