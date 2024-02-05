@@ -9,14 +9,14 @@
     <!-- Mensagem informativa de login e link para logout do usuário -->
     {% include 'authors/partials/login_message.html'%}
 
+    <!-- Exibição das receitas do usuário logado -->
     <div class="authors-dashboard-container">
       <h3>Your recipes</h3>
-
-      <!-- Exibição das receitas do usuário logado -->
+      <!-- Receitas -->
       <ul>
         {% for recipe in recipes %}
           <li>
-            <a href="#"> {{ recipe.title }} </a>
+            <a href="{% url 'authors:dashboard_recipe_edit' recipe.id %}"> {{ recipe.title }} </a>
           </li>
         {% empty %}
           <li>
