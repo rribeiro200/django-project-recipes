@@ -158,3 +158,33 @@ def dashboard_recipe_edit(request, id):
             'form': form
         }
     )
+
+
+# View para criação de nova receita
+@login_required(login_url='authors:login', redirect_field_name='next')
+def dashboard_recipe_create(request):
+    form = AuthorRecipeForm(  # Formulário de nova receita já recebendo os dados submetidos
+        request.POST or None, 
+        files=request.FILES or None,
+    )
+
+    # Validação e salvamento dos dados do form no banco de dados
+    if form.is_valid():
+        new_recipe: Recipe = form.save(commit=False)
+
+        new_recipe.author = request.user # Vinculando o usuário logado, como autor da nova receita
+        new_recipe.preparation_steps_is_html = False
+        new_recipe.is_published = False
+
+        new_recipe.save() # Salvando definitivamente a nova receita no banco de dados
+        
+        messages.success(request, 'Your new recipe has been created successfully!') # Feedback pro usuário
+
+        return redirect(reverse('authors:dashboard')) # Redirecionando para dashboard de receitas pós cadastro de nova receita
+
+    # Renderizando o template com contexto
+    return render(request, 'authors/pages/dashboard_recipe_create.html', 
+        {
+            'form': form
+        }              
+    )

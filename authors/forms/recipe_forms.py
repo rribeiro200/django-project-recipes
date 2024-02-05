@@ -14,7 +14,7 @@ class AuthorRecipeForm(forms.ModelForm):
         model = Recipe # Modelo que o formulário está associado
         fields = ('title',  # Quais campos do modelo serão incluídos no formulário 
                   'description', 'preparation_time', 'preparation_time_unit',
-                  'servings', 'servings_unit', 'preparation_steps','cover',
+                  'servings', 'servings_unit', 'preparation_steps','cover', 'category'
         )
         # Customização e comportamento do elemento (campos do form) para interface de usuário
         widgets = { 

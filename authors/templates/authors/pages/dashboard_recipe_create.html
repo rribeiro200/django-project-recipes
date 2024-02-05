@@ -1,0 +1,25 @@
+{% extends 'global/base.html' %}
+
+{% block title %}Dashboard Recipe | {% endblock title %}
+
+{% block content %}
+
+  {% block search_bar %}{% endblock search_bar %}
+
+  <div class="main-content center container" style="margin-top: 50px;">
+    <h2>Dashboard Recipe</h2>
+    <!-- Incluindo mensagens de feedback -->
+    {% include 'global/partials/messages.html'%}
+  
+    <!-- Mensagem informativa de login, e link para logout do usuário -->
+    {% include 'authors/partials/login_message.html'%}
+  
+    <!-- Form para criar receita -->
+    <div class="left">  
+      {% include 'global/partials/form.html'%}
+    </div>
+
+  </div>
+
+  
+{% endblock content %}
