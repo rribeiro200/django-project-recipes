@@ -73,7 +73,7 @@ def login_create(request):
     else:
         messages.error(request, 'Error to validate form data.')
 
-    return redirect(login_url)
+    return redirect(reverse('authors:dashboard'))
 
 
 @login_required(login_url='authors:login', redirect_field_name='next') # Precisa estar logado para que a view funcione.
@@ -91,4 +91,9 @@ def logout_view(request):
     # Se estiver tudo válido, mostra mensagem de logout feito com sucesso
     messages.success(request, 'Logged out successfully')
 
-    return redirect(reverse('authors:login'))  
+    return redirect(reverse('authors:login'))
+
+
+@login_required(login_url='authors:login', redirect_field_name='next') # Precisa estar logado para que a view funcione.
+def dashboard(request):
+    return render(request, 'authors/pages/dashboard.html')
