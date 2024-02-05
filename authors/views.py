@@ -94,6 +94,7 @@ def logout_view(request):
     return redirect(reverse('authors:login'))
 
 
-@login_required(login_url='authors:login', redirect_field_name='next') # Precisa estar logado para que a view funcione.
+# View dashboard - área admin do autor
+@login_required(login_url='authors:login', redirect_field_name='next')
 def dashboard(request):
     return render(request, 'authors/pages/dashboard.html')
