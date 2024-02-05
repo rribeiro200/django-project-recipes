@@ -132,9 +132,26 @@ def dashboard_recipe_edit(request, id):
     
     # Formulário recebendo dados para atualização
     form = AuthorRecipeForm(
-        request.POST or None, # Form recebe dados postados pelo usuário
-        instance=recipe.first() # Pré-preenche os campos do formulário com os valores existentes da instância específica.
+        data=request.POST or None, # Modelo Form recebe dados postados pelo usuário
+        files=request.FILES or None, # Habilitado recebimento de arquivos no form.
+        instance=recipe.first() # Pré-preenche os campos do formulário com os valores existentes da instância específica. E os atualiza em sequência
     )
+
+    # Validação do formulário
+    if form.is_valid():
+        recipe = form.save(commit=False) # Permite ajustes adicionais antes de salvar definitivamente
+
+        recipe.author = request.user  # Autor da receita, tem que ser o usuário logado
+        recipe.preparation_steps_is_html = False # Usuário nunca poderá inserir HTML
+        recipe.is_published = False # Receita nunca vai ser publicada, de primeiro momento
+
+        # Salvando definitivamente as alterações no modelo (base de dados).
+        recipe.save()
+
+        # Feedback pro usuário
+        messages.success(request, 'Your recipe has been saved successfully!')
+
+        return redirect(reverse('authors:dashboard_recipe_edit', args=(id, )))
 
     return render(request, 'authors/pages/dashboard_recipe.html', 
         {
