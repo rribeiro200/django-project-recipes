@@ -1,7 +1,7 @@
 from django.urls import reverse
 from django.http import Http404
 from django.shortcuts import redirect, render
-from authors.forms import RegisterForm, LoginForm
+from authors.forms import RegisterForm, LoginForm, AuthorRecipeForm
 from pprint import pprint
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -118,18 +118,26 @@ def dashboard(request):
 # View para edição da receita
 @login_required(login_url='authors:login', redirect_field_name='next')
 def dashboard_recipe_edit(request, id):
+    # Buscando receita do usuário
     recipe = Recipe.objects.filter(
         is_published=False,
         author=request.user,
         pk=id
     )
 
+    # Se não existir receita
     if not recipe:
         messages.error(request, 'You do not have recipe for editing')
         raise Http404
+    
+    # Formulário recebendo dados para atualização
+    form = AuthorRecipeForm(
+        request.POST or None,
+        instance=recipe.first() # Pré-preenche os campos do formulário com os valores existentes da instância específica.
+    )
 
     return render(request, 'authors/pages/dashboard_recipe.html', 
         {
-            'recipes': recipe,
+            'form': form
         }
     )
