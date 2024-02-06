@@ -1,16 +1,17 @@
 <div class="recipe recipe-list-item">
     
     {% if recipe.cover %}
-    <div class="recipe-cover">
-        <a href="{% url 'recipes:recipe' recipe.id %}">
-            <img src="{{ recipe.cover.url }}" alt="Temporario">
-        </a>
-    </div>
+        <div class="recipe-cover">
+            <a href="{{ recipe.get_absolute_url }}">
+                <img src="{{ recipe.cover.url }}" alt="Temporario">
+            </a>
+        </div>
     {% endif %}
 
     <div class="recipe-title-container">
         <h2 class="recipe-title"> 
-            <a href="{% url 'recipes:recipe' recipe.id %}">
+            <!-- Usando url absoluta da própria Recipe -->
+            <a href="{{ recipe.get_absolute_url }}">
                 {{ recipe.title }}
             </a>        
         </h2>

@@ -2,6 +2,8 @@ import os
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+from django.urls import reverse
+from django.utils.text import slugify
 
 from project import settings
 
@@ -32,6 +34,7 @@ class Recipe(models.Model):
         User, on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    # Redimensionando imagem da receita enviada pelo usuário
     @staticmethod
     def resize_image(original_img, new_width=1280):
         img_full_path = os.path.join(settings.MEDIA_ROOT, original_img.name)
@@ -50,15 +53,23 @@ class Recipe(models.Model):
         new_image.save(img_full_path, optime=True, quality=60)
         img_pil.close()
 
-    
+    # Retorna um URL absoluto para visualização detalhada da receita
+    def get_absolute_url(self):
+        return reverse('recipes:recipe', args=(self.id,))
+
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+        # Criando slug automático
+        if not self.slug:
+            slug = f'{slugify(self.title, allow_unicode=False)}'
+            self.slug = slug # Nova slug
 
+        # Redimensionando imagem antes de salvar a receita
         max_image_size = 1280
-
         if self.cover:
             self.resize_image(self.cover, max_image_size)
-
+        
+        # Salvando definitivamente, depois das modificações necessárias
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
