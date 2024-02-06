@@ -23,14 +23,10 @@
             
             <!-- Deletar receitas -->
               <form action="{% url 'authors:dashboard_recipe_delete' %}" class="inline-form form-delete" method="POST">
-                
                 {% csrf_token %}
-                
                 <!-- Campo escondido recebe o id da receita no loop atual em específico-->
                 <input type="hidden" name="id" value="{{ recipe.id }}">
-                
                 <button class="plaintext-button" type="submit">❌</button>
-              
               </form>
             <!-- Deletar receitas -->
 

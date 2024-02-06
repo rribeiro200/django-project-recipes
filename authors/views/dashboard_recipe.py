@@ -37,7 +37,12 @@ class DashboardRecipeCreate(View):
 
             return redirect(reverse('authors:dashboard'))
 
+
 # EDITAR RECEITAS
+@method_decorator(
+    login_required(login_url='authors:login', redirect_field_name='next'),
+    name='dispatch'
+)
 class DashboardRecipeEdit(View):
     def get_recipe(self, id=None):
         recipe = None
@@ -87,3 +92,22 @@ class DashboardRecipeEdit(View):
             )
 
         return render_recipe(request, form)
+    
+
+# DELETAR RECEITAS
+@method_decorator(
+    login_required(login_url='authors:login', redirect_field_name='next'),
+    name='dispatch'
+)
+class DashboardRecipeDelete(DashboardRecipeEdit):
+    def get(self, request):
+        raise Http404
+
+    def post(self, request):
+        recipe_id = request.POST.get('id')
+
+        recipe = self.get_recipe(recipe_id)
+        recipe.delete() # type: ignore
+
+        messages.success(request, 'Deleted successfully!')
+        return redirect(reverse('authors:dashboard'))
