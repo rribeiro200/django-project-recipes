@@ -6,8 +6,14 @@ from django.urls import reverse
 from django.views import View
 from recipes.models import Recipe
 from utils.render_template_form_recipe import render_recipe
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 # CRIAR RECEITAS
+@method_decorator(
+    login_required(login_url='authors:login', redirect_field_name='next'),
+    name='dispatch'
+)
 class DashboardRecipeCreate(View):
     def get(self, request):
         form = AuthorRecipeForm()
