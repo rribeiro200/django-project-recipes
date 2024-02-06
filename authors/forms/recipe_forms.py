@@ -75,10 +75,11 @@ class AuthorRecipeForm(forms.ModelForm):
     # Validação de um único campo (title)
     def clean_preparation_time(self):
         field_name = 'preparation_time'
-        field_value = self.cleaned_data.get('preparation_time')
+        field_value = self.cleaned_data.get(field_name)
 
-        # Se usuário colocar um número negativo no tempo de preparação da receita
-        if not is_positive_number(self.cleaned_data.get(field_value)):
+        # Caso usuário colocar um número negativo no tempo de preparação da receita
+        if not is_positive_number(field_value):
             self._my_errors[field_name].append('Must be a positive number')
 
-        return
+        # Retornar o valor limpo do campo após a validação
+        return field_value

@@ -55,12 +55,12 @@ class Recipe(models.Model):
 
     # Retorna um URL absoluto para visualização detalhada da receita
     def get_absolute_url(self):
-        return reverse('recipes:recipe', args=(self.id,))
+        return reverse('recipes:recipe', args=(self.pk,))
 
     def save(self, *args, **kwargs):
         # Criando slug automático
         if not self.slug:
-            slug = f'{slugify(self.title, allow_unicode=False)}'
+            slug = f'{slugify(self.title or "", allow_unicode=False)}'
             self.slug = slug # Nova slug
 
         # Redimensionando imagem antes de salvar a receita
