@@ -4,7 +4,7 @@ from django.shortcuts import render, get_list_or_404, get_object_or_404
 from utils.pagination import make_pagination
 from utils.recipes.factory import make_recipe
 from recipes.models import Recipe, Category
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
 import os
@@ -37,6 +37,31 @@ class RecipeListViewBase(ListView):
 
         return ctx
 
+
+class RecipeListViewHome(RecipeListViewBase):
+    template_name = 'recipes/pages/home.html'
+
+
+class RecipeListViewCategory(RecipeListViewBase):
+    template_name = 'recipes/pages/category.html'
+
+    def get_queryset(self, *args, **kwargs) -> QuerySet[Recipe]:
+        qs = super().get_queryset(*args, **kwargs)
+        qs = qs.filter(
+            category__id=self.kwargs['category_id'],
+            is_published=True
+        )
+        return qs
+    
+    def get_context_data(self, *args, **kwargs: Any) -> dict[str, Any]:
+        ctx = super().get_context_data(*args, **kwargs)
+        object_list = ctx['object_list']
+        category_name = object_list[0].category.name
+        
+        ctx.update({
+            'title': f'{category_name} - Category |'
+        })
+        return ctx
 
 
 def category(request, category_id):
