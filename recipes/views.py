@@ -51,6 +51,10 @@ class RecipeListViewCategory(RecipeListViewBase):
             category__id=self.kwargs['category_id'],
             is_published=True
         )
+
+        if not qs:
+            raise Http404()
+
         return qs
     
     def get_context_data(self, *args, **kwargs: Any) -> dict[str, Any]:
