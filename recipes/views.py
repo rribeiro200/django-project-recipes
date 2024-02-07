@@ -8,7 +8,7 @@ from django.http import Http404, HttpRequest, HttpResponse
 from django.db.models import Q
 from django.core.paginator import Paginator
 import os
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 
 PER_PAGE = int(os.environ.get('PER_PAGE', 9))
@@ -105,18 +105,25 @@ class RecipeListViewSearch(RecipeListViewBase):
 
         return ctx
 
-def recipe(request, id):
-    recipe = get_object_or_404(
-        Recipe,
-        pk=id,
-        is_published=True,
-    )
 
-    return render(
-        request,
-        'recipes/pages/recipe-view.html',
-        context={
-            'recipe': recipe,
-            'is_detail_page': True,
-        }
-    )
+class RecipeDetailViewBase(DetailView):
+    model = Recipe
+    context_object_name = 'recipe'
+    template_name = 'recipes/pages/recipe-view.html'
+
+    def get_queryset(self) -> QuerySet[Recipe]:
+        qs = super().get_queryset()
+        qs = qs.filter(
+            is_published=True
+        )
+
+        return qs
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        ctx = super().get_context_data(**kwargs)
+        
+        ctx.update({
+            'is_detail_page': True
+        })
+        
+        return ctx
