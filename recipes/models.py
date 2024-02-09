@@ -1,11 +1,15 @@
 import os
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.functions import Concat
 from PIL import Image
+from django.db.models import Q, F, Value
 from django.urls import reverse
 from django.utils.text import slugify
-
 from project import settings
+from django.contrib.contenttypes.fields import GenericRelation
+from tag.models import Tag
+
 
 class Category(models.Model):
     name = models.CharField(max_length=65, null=True)
@@ -13,7 +17,19 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+
+class RecipeManager(models.Manager):
+    def get_published(self):
+        return self.filter(is_published=True).annotate(author_full_name=Concat(
+                F('author__first_name'), Value(' '), F('author__last_name'),
+                Value(' ('), F('author__username'), Value(')')
+
+            )
+        )
+
+
 class Recipe(models.Model):
+    my_manager = RecipeManager()
     title = models.CharField(max_length=65, null=True)
     description = models.CharField(max_length=165, null=True)
     slug = models.SlugField(unique=True)
@@ -33,6 +49,7 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True
     )
+    tags = GenericRelation(Tag, related_query_name='recipes')
 
     # Redimensionando imagem da receita enviada pelo usuário
     @staticmethod

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # Meus apps
+    'tag',
     'recipes',
     'authors',
     "debug_toolbar",

@@ -9,6 +9,19 @@
 
 <body>
     <h1>Theory</h1>
+
+    <ul>
+        {% for recipe in recipes %}
+        <li>
+            {{ recipe.author_full_name }}
+        </li>
+        {% empty %}
+        <p>
+            No recipes found
+        </p>
+        {% endfor %}
+    </ul>
+
 </body>
 
 </html>
