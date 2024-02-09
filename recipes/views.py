@@ -145,7 +145,6 @@ class RecipeDetailViewBase(DetailView):
     
 # DetailView API
 class RecipeDetailAPI(RecipeDetailViewBase):
-    
     def render_to_response(self, context: dict[str, Any], **response_kwargs: Any) -> HttpResponse:
         recipe = self.get_context_data()['recipe']
         recipe_dict = model_to_dict(recipe)
@@ -165,3 +164,16 @@ class RecipeDetailAPI(RecipeDetailViewBase):
             recipe_dict,
             safe=False
         )
+    
+
+# Teoria
+def theory(request, *args, **kwargs):
+    
+
+    return render(
+        request, 
+        'recipes/pages/theory.html',
+        {
+            
+        }
+    )
