@@ -25,6 +25,7 @@ class RecipeListViewBase(ListView):
         qs = qs.filter(
             is_published=True,
         )
+        qs = qs.prefetch_related('author', 'category')
         
         return qs
     
@@ -54,6 +55,7 @@ class RecipeListViewHomeApi(RecipeListViewBase):
             recipe_list,
             safe=False
         )    
+
 
 class RecipeListViewCategory(RecipeListViewBase):
     template_name = 'recipes/pages/category.html'
