@@ -7,7 +7,6 @@ from django.db.models import Q, F, Value
 from django.urls import reverse
 from django.utils.text import slugify
 from project import settings
-from django.contrib.contenttypes.fields import GenericRelation
 from tag.models import Tag
 
 
@@ -49,7 +48,7 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.SET_NULL, null=True, blank=True
     )
-    tags = GenericRelation(Tag, related_query_name='recipes')
+    tags = models.ManyToManyField(Tag)
 
     # Redimensionando imagem da receita enviada pelo usuário
     @staticmethod

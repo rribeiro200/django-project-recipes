@@ -8,12 +8,6 @@ class CategoryAdmin(admin.ModelAdmin):
     ...
 
 
-class TagInline(GenericStackedInline):
-    model = Tag
-    fields = 'name',
-
-
-
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'created_at', 'is_published', 'author',)
@@ -26,9 +20,7 @@ class RecipeAdmin(admin.ModelAdmin):
     prepopulated_fields = { # Campos pré-preenchidos - SLUG preenchido de acordo com o TITLE
         "slug": ('title',)
     }
-    inlines = [
-        TagInline
-    ]
+    autocomplete_fields = 'tags',
 
 
 admin.site.register(Category, CategoryAdmin)
