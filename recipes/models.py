@@ -6,7 +6,7 @@ from PIL import Image
 from django.db.models import Q, F, Value
 from django.urls import reverse
 from django.utils.text import slugify
-from project import settings
+from project import __settings
 from tag.models import Tag
 
 
@@ -53,7 +53,7 @@ class Recipe(models.Model):
     # Redimensionando imagem da receita enviada pelo usuário
     @staticmethod
     def resize_image(original_img, new_width=1280):
-        img_full_path = os.path.join(settings.MEDIA_ROOT, original_img.name)
+        img_full_path = os.path.join(__settings.MEDIA_ROOT, original_img.name)
         img_pil = Image.open(img_full_path)
         original_width, original_height = img_pil.size
         new_height = round((new_width * original_height) / original_width)
