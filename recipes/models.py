@@ -1,12 +1,14 @@
+from collections import defaultdict
 import os
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.functions import Concat
 from PIL import Image
 from django.db.models import Q, F, Value
+from django.forms import ValidationError
 from django.urls import reverse
 from django.utils.text import slugify
-from project import __settings
+from project.settings.assets import MEDIA_ROOT 
 from tag.models import Tag
 
 
@@ -53,7 +55,7 @@ class Recipe(models.Model):
     # Redimensionando imagem da receita enviada pelo usuário
     @staticmethod
     def resize_image(original_img, new_width=1280):
-        img_full_path = os.path.join(__settings.MEDIA_ROOT, original_img.name)
+        img_full_path = os.path.join(MEDIA_ROOT, original_img.name)
         img_pil = Image.open(img_full_path)
         original_width, original_height = img_pil.size
         new_height = round((new_width * original_height) / original_width)
@@ -86,6 +88,22 @@ class Recipe(models.Model):
         
         # Salvando definitivamente, depois das modificações necessárias
         super().save(*args, **kwargs)
+
+    def clean(self, *args, **kwargs):
+        error_messages = defaultdict(list)
+
+        recipe_from_db = Recipe.my_manager.filter(
+            title__iexact=self.title
+        ).first()
+
+        if recipe_from_db:
+            if recipe_from_db.pk != self.pk:
+                error_messages['title'].append(
+                    'Found recipe with the same title'
+                )
+        
+        if error_messages:
+            raise ValidationError(error_messages)
 
     def __str__(self):
         return self.title
