@@ -1,60 +1,69 @@
 <div class="recipe recipe-list-item">
-    
+
     {% if recipe.cover %}
-        <div class="recipe-cover">
-            <a href="{{ recipe.get_absolute_url }}">
-                <img src="{{ recipe.cover.url }}" alt="Temporario">
-            </a>
-        </div>
+    <div class="recipe-cover">
+        <a href="{{ recipe.get_absolute_url }}">
+            <img src="{{ recipe.cover.url }}" alt="Temporario">
+        </a>
+    </div>
     {% endif %}
 
     <div class="recipe-title-container">
-        <h2 class="recipe-title"> 
+        <h2 class="recipe-title">
             <!-- Usando url absoluta da própria Recipe -->
             <a href="{{ recipe.get_absolute_url }}">
                 {{ recipe.title }}
-            </a>        
+            </a>
         </h2>
     </div>
 
     <div class="recipe-author">
 
         {% if recipe.author is not None %}
-            <span class="recipe-author-item">
+        <span class="recipe-author-item">
+
+            {% if recipe.author.profile %}
+            <a href="{% url 'authors:profile' recipe.author.profile.id %}">
+                {% endif %}
+
                 <i class="fas fa-user"></i>
                 <!--
                     Se autor tiver nome, exibe o nome e sobrenome normalmente
                     Se não, vai exibir o campo username do Django Admin
                 -->
                 {% if recipe.author.first_name %}
-                    {{ recipe.author.first_name }}
-                    {{ recipe.author.last_name }}
+                {{ recipe.author.first_name }}
+                {{ recipe.author.last_name }}
                 {% else %}
-                    {{ recipe.author.username }}
+                {{ recipe.author.username }}
                 {% endif %}
-            
-            </span>
+
+                {% if recipe.author.profile %}
+            </a>
+            {% endif %}
+        </span>
         {% else %}
         <span class="recipe-author-item">
             <i class="fas fa-user"></i>
             Autor desconhecido
         </span>
+
         {% endif %}
-        
+
         <span class="recipe-author-item">
             <i class="fas fa-calendar-alt"></i>
             {{ recipe.created_at|date:"d/m/Y" }} às {{ recipe.created_at|date:"H:i" }}
         </span>
 
         {% if recipe.category is not None %}
-            <span class="recipe-author-item">
-                <a href="{% url 'recipes:category' recipe.category.id %}">
-                    <i class="fas fa-layer-group"></i>
-                    <span> {{ recipe.category.name }} </span>
-                </a>
-            </span>
+        <span class="recipe-author-item">
+            <a href="{% url 'recipes:category' recipe.category.id %}">
+                <i class="fas fa-layer-group"></i>
+                <span> {{ recipe.category.name }} </span>
+            </a>
+        </span>
         {% endif %}
-    
+
     </div>
 
     <div class="recipe-content">
@@ -91,24 +100,24 @@
     {% endif %}
 
     {% if is_detail_page is True %}
-        {% if recipe.preparation_steps_is_html is True %}
-            <div class="preparation-steps">
-                {{ recipe.preparation_steps|safe }}
-            </div>
-        {% else %}
-            <div class="preparation-steps">
-                {{ recipe.preparation_steps|linebreaksbr }}
-            </div>
-        {% endif %}
+    {% if recipe.preparation_steps_is_html is True %}
+    <div class="preparation-steps">
+        {{ recipe.preparation_steps|safe }}
+    </div>
+    {% else %}
+    <div class="preparation-steps">
+        {{ recipe.preparation_steps|linebreaksbr }}
+    </div>
+    {% endif %}
 
-        {% if recipe.tags.all %}
-            {% for tag in recipe.tags.all %}
-                <p>
-                    Tags:
-                    <a href="{% url 'recipes:tags' tag.slug %}"> {{ tag.name }} </a>
-                </p>
-            {% endfor %}
-        {% endif %}
-    
+    {% if recipe.tags.all %}
+    {% for tag in recipe.tags.all %}
+    <p>
+        Tags:
+        <a href="{% url 'recipes:tags' tag.slug %}"> {{ tag.name }} </a>
+    </p>
+    {% endfor %}
+    {% endif %}
+
     {% endif %}
 </div>
