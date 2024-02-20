@@ -36,6 +36,8 @@ class DashboardRecipeCreate(View):
             messages.success(request, 'Your new recipe has been created successfully!')
 
             return redirect(reverse('authors:dashboard'))
+        
+        return render_recipe(request, form)
 
 
 # EDITAR RECEITAS

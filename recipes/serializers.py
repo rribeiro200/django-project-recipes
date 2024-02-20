@@ -1,3 +1,8 @@
+# Utils
+from collections import defaultdict
+from django.forms import ValidationError
+from authors.validators import AuthorRecipeValidator
+
 # Rest Framework
 from rest_framework import serializers
 
@@ -20,7 +25,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'description', 'public', 'author', 
             'author_name', 'category', 'category_name', 'preparation',
-            'tags', 'tag_objects', 'tag_links'
+            'tags', 'tag_objects', 'tag_links', 'preparation_time', 'preparation_time_unit',
+            'servings', 'servings_unit', 'preparation_steps', 'cover'
         ]
 
     public = serializers.BooleanField(source='is_published', read_only=True)
@@ -35,5 +41,13 @@ class RecipeSerializer(serializers.ModelSerializer):
         view_name='recipes:recipes_api_v2_tag'
     )
 
+
     def get_preparation(self, recipe):
         return f'{recipe.preparation_time} {recipe.preparation_time_unit}'
+    
+
+    def validate(self, attrs):
+        super_validate = super().validate(attrs)
+        AuthorRecipeValidator(data=attrs, ErrorClass=ValidationError)
+
+        return super_validate

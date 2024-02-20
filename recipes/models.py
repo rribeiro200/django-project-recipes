@@ -10,6 +10,8 @@ from django.urls import reverse
 from django.utils.text import slugify
 from project.settings.assets import MEDIA_ROOT 
 from tag.models import Tag
+from random import SystemRandom
+import string
 
 
 class Category(models.Model):
@@ -76,9 +78,13 @@ class Recipe(models.Model):
 
     def save(self, *args, **kwargs):
         # Criando slug automático
-        if not self.slug:
-            slug = f'{slugify(self.title or "", allow_unicode=False)}'
-            self.slug = slug # Nova slug
+        rand_letters = ''.join(
+            SystemRandom().choices(
+                string.ascii_letters + string.digits,
+                k=5,
+            )
+        )
+        self.slug = slugify(f'{self.title} + {rand_letters}')
 
         saved = super().save()
 

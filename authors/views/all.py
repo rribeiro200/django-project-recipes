@@ -98,10 +98,7 @@ def logout_view(request):
 @login_required(login_url='authors:login', redirect_field_name='next')
 def dashboard(request):
     # Pegando receitas de um usuário específico e não publicadas
-    recipes = Recipe.my_manager.filter(
-        is_published=False, # Receitas não publicadas.
-        author=request.user # Dono da receita deve ser o mesmo que está logado no site
-    )
+    recipes = Recipe.my_manager.get_published().filter(author=request.user)
 
     return render(request, 'authors/pages/dashboard.html', 
         {

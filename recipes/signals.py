@@ -20,8 +20,13 @@ def recipe_cover_delete(sender, instance, *args, **kwargs):
 # Depois de atualizar o cover, apagando o caminho do antigo cover.
 @receiver(pre_save, sender=Recipe)
 def recipe_cover_update(sender, instance, *args, **kwargs):
-    old_instance = Recipe.my_manager.get(pk=instance.pk)
-    is_new_cover = old_instance.cover != instance.cover
+    if instance.pk:
+        try:
+            old_instance = Recipe.my_manager.get(pk=instance.pk)
+        except Exception as e:
+            return f'Erro: {e}'
+        
+        is_new_cover = old_instance != instance.cover
 
-    if is_new_cover:
-        delete_cover(old_instance)
+        if is_new_cover:
+            delete_cover(old_instance)
