@@ -52,6 +52,10 @@ class Recipe(models.Model):
     )
     tags = models.ManyToManyField(Tag, blank=True, default='')
 
+    # Retorna um URL absoluto para visualização detalhada da receita
+    def get_absolute_url(self):
+        return reverse('recipes:recipe', args=(self.pk,))
+
     # Redimensionando imagem da receita enviada pelo usuário
     @staticmethod
     def resize_image(original_img, new_width=1280):
@@ -71,23 +75,20 @@ class Recipe(models.Model):
         new_image.save(img_full_path, optime=True, quality=60)
         img_pil.close()
 
-    # Retorna um URL absoluto para visualização detalhada da receita
-    def get_absolute_url(self):
-        return reverse('recipes:recipe', args=(self.pk,))
-
     def save(self, *args, **kwargs):
         # Criando slug automático
         if not self.slug:
             slug = f'{slugify(self.title or "", allow_unicode=False)}'
             self.slug = slug # Nova slug
 
+        saved = super().save()
+
         # Redimensionando imagem antes de salvar a receita
-        max_image_size = 1280
         if self.cover:
-            self.resize_image(self.cover, max_image_size)
+            self.resize_image(self.cover)
         
         # Salvando definitivamente, depois das modificações necessárias
-        super().save(*args, **kwargs)
+        return saved
 
     def clean(self, *args, **kwargs):
         error_messages = defaultdict(list)
