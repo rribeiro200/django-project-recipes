@@ -7,15 +7,18 @@ from django.forms.models import model_to_dict
 from django.db.models.functions import Concat
 from tag.models import Tag
 
-from typing import Any
+# Django
 from django.http.response import HttpResponse as HttpResponse
 from django.shortcuts import render, get_list_or_404, get_object_or_404
-from utils.pagination import make_pagination
-from utils.recipes.factory import make_recipe
 from django.http import Http404, HttpRequest, HttpResponse, HttpResponse as HttpResponse, JsonResponse
 from django.core.paginator import Paginator
-import os
 from django.views.generic import ListView, DetailView
+
+# Others
+from utils.pagination import make_pagination
+from utils.recipes.factory import make_recipe
+import os
+from typing import Any
 
 PER_PAGE = int(os.environ.get('PER_PAGE', 9))
 
@@ -211,3 +214,5 @@ class RecipeListViewTag(RecipeListViewBase):
         })
 
         return ctx
+    
+

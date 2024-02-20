@@ -1,5 +1,5 @@
 from django.urls import reverse, resolve
-from recipes import views
+from recipes.views import site
 from .test_recipe_base import RecipeTestBase
 from unittest import skip
 
@@ -10,7 +10,7 @@ class RecipeDetailViewTest(RecipeTestBase):
     # Verifica se view de detalhes da receita está funcionando corretamente
     def test_recipe_detail_views_function_is_correct(self):
         view = resolve(reverse('recipes:recipe', kwargs={'id': 1}))
-        self.assertIs(view.func, views.recipe)
+        self.assertIs(view.func, site.recipe)
 
     # Espera retornar 404 caso id de receita unica nao for encontrado na URL
     def test_recipe_detail_views_returns_404_if_no_recipes_found(self):

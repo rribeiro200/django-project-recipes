@@ -1,5 +1,5 @@
 from django.urls import reverse, resolve
-from recipes import views
+from recipes.views import site
 from .test_recipe_base import RecipeTestBase
 from unittest import skip
 
@@ -25,7 +25,7 @@ class RecipeCategoryViewTest(RecipeTestBase):
     # Verifica se a view da URL está funcionando corretamente
     def test_recipe_category_views_function_is_correct(self):
         view = resolve(reverse('recipes:category', kwargs={'category_id': 1000}))
-        self.assertIs(view.func.view_class, views.RecipeListViewCategory)
+        self.assertIs(view.func.view_class, site.RecipeListViewCategory)
 
     # Espera retornar 404 caso id da categoria não for encontrado
     def test_recipe_category_view_returns_404_if_no_recipes_found(self):
