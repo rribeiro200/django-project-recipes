@@ -13,7 +13,7 @@ from tag.models import Tag
 from ..serializers import RecipeSerializer, TagSerializer
 
 
-# Visualização de lista
+# Visualização de lista de receitas
 @api_view()
 def recipe_api_list(request):
     recipes = Recipe.my_manager.get_published()[:10]
@@ -26,7 +26,7 @@ def recipe_api_list(request):
     return Response(serializer.data)
 
 
-# Visualização de detalhe
+# Visualização de detalhe da receita
 @api_view()
 def recipe_api_detail(request, pk):
     recipe = Recipe.my_manager.filter(pk=pk).first()
@@ -44,7 +44,7 @@ def recipe_api_detail(request, pk):
         }, status=status.HTTP_418_IM_A_TEAPOT)
     
 
-# 
+# Detalhes da tag da receita
 @api_view()
 def tag_api_detail(request, pk):
     tag = get_object_or_404(Tag.objects.filter(pk=pk))
