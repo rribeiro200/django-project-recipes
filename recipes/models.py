@@ -24,9 +24,8 @@ class RecipeManager(models.Manager):
         return self.filter(is_published=True).annotate(author_full_name=Concat(
                 F('author__first_name'), Value(' '), F('author__last_name'),
                 Value(' ('), F('author__username'), Value(')')
-
             )
-        )
+        ).select_related('category', 'author').prefetch_related('tags')
 
 
 class Recipe(models.Model):

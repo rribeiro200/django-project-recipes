@@ -9,14 +9,19 @@ from rest_framework import status
 
 # Models
 from ..models import Recipe
-from ..serializers import RecipeSerializer
+from tag.models import Tag
+from ..serializers import RecipeSerializer, TagSerializer
 
 
 # Visualização de lista
 @api_view()
 def recipe_api_list(request):
     recipes = Recipe.my_manager.get_published()[:10]
-    serializer = RecipeSerializer(instance=recipes, many=True)
+    serializer = RecipeSerializer(
+        instance=recipes, 
+        many=True,
+        context={'request': request}
+    )
 
     return Response(serializer.data)
 
@@ -27,9 +32,24 @@ def recipe_api_detail(request, pk):
     recipe = Recipe.my_manager.filter(pk=pk).first()
 
     if recipe:
-        serializer = RecipeSerializer(instance=recipe, many=False)
+        serializer = RecipeSerializer(
+            instance=recipe, 
+            many=False,
+            context={'request': request}
+        )
         return Response(serializer.data)
     else:
         return Response({
             'detail': 'Eita! Nenhum objeto encontrado.'
         }, status=status.HTTP_418_IM_A_TEAPOT)
+    
+
+# 
+@api_view()
+def tag_api_detail(request, pk):
+    tag = get_object_or_404(Tag.objects.filter(pk=pk))
+    serializer = TagSerializer(
+        instance=tag, many=False, context={'request': request}
+    )
+
+    return Response(serializer.data)
