@@ -45,6 +45,14 @@ class RecipeAPIv2ViewSet(ModelViewSet):
 
         return super().get_permissions()
     
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save(author=request.user)
+        headers = self.get_success_headers(serializer.data)
+
+        return Response(serializer.data, headers=headers)
+    
     def partial_update(self, request, *args, **kwargs):
         recipe = self.get_object()
         serializer = RecipeSerializer(
