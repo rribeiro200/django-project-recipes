@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 
 # Models
 from ..models import Recipe
@@ -27,6 +28,7 @@ class RecipeAPIv2ViewSet(ModelViewSet):
     queryset = Recipe.my_manager.get_published()
     serializer_class = RecipeSerializer
     pagination_class = RecipeAPIV2Pagination
+    permission_classes = [IsAuthenticated, ]
 
 # Detalhes
 class TagAPIV2Detail(APIView):
