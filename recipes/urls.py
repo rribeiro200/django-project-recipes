@@ -11,7 +11,7 @@ from rest_framework.routers import SimpleRouter
 app_name = 'recipes'
 
 recipe_api_v2_router = SimpleRouter()
-recipe_api_v2_router.register('recipes/api/v2/', api.RecipeAPIv2ViewSet, basename='recipes-api')
+recipe_api_v2_router.register('', api.RecipeAPIv2ViewSet, basename='recipes-api')
 
 urlpatterns = [
     path('', site.RecipeListViewHome.as_view(), name='home'),
@@ -30,6 +30,6 @@ urlpatterns = [
     path('recipes/tags/<slug:slug>', site.RecipeListViewTag.as_view(), name='tags'),
     
     # API - V2
-    path('', include(recipe_api_v2_router.urls)),
+    path('recipes/api/v2/', include(recipe_api_v2_router.urls)),
     path('recipes/api/v2/tag/<int:pk>/', api.TagAPIV2Detail.as_view(), name='recipe_api_v2_tag'),
 ]
