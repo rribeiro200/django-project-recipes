@@ -14,7 +14,7 @@ from ..serializers import RecipeSerializer, TagSerializer
 
 
 # Visualização de lista de receitas
-@api_view(http_method_names=['get', 'post',])
+@api_view(http_method_names=['get', 'post'])
 def recipe_api_list(request):
     if request.method == 'GET':
         recipes = Recipe.my_manager.get_published()[:10]
@@ -33,24 +33,38 @@ def recipe_api_list(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-
-# Visualização de detalhe da receita
-@api_view()
+# Visualização de detalhe de uma receita
+@api_view(http_method_names=['get', 'patch', 'delete'])
 def recipe_api_detail(request, pk):
-    recipe = Recipe.my_manager.filter(pk=pk).first()
+    recipe = get_object_or_404(
+        Recipe.my_manager.get_published(), pk=pk
+    )
 
-    if recipe:
+    if request.method == 'GET':
         serializer = RecipeSerializer(
-            instance=recipe, 
+            instance=recipe,
             many=False,
             context={'request': request}
         )
+
         return Response(serializer.data)
-    else:
-        return Response({
-            'detail': 'Eita! Nenhum objeto encontrado.'
-        }, status=status.HTTP_418_IM_A_TEAPOT)
-    
+    elif request.method == 'PATCH':
+        serializer = RecipeSerializer(
+            instance=recipe,
+            data=request.data,
+            many=False,
+            context={'request': request},
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+    elif request.method == 'DELETE':
+        recipe.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 # Detalhes da tag da receita
 @api_view()

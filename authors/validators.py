@@ -33,7 +33,6 @@ class AuthorRecipeValidator():
         if self.errors:
             raise self.ErrorClass(self.errors)
 
-    
     # Validação de um único campo (title)
     def clean_title(self):
         title = self.data.get('title')
@@ -43,7 +42,7 @@ class AuthorRecipeValidator():
 
         return title
     
-    # Validação de um único campo (title)
+    # Validação de um único campo (preparation_time)
     def clean_preparation_time(self):
         field_name = 'preparation_time'
         field_value = self.data.get(field_name)
@@ -55,7 +54,7 @@ class AuthorRecipeValidator():
         # Retornar o valor limpo do campo após a validação
         return field_value
     
-
+    # Validação de um único campo (servings)
     def clean_servings(self):
         field_name = 'servings'
         field_value = self.data.get(field_name)
