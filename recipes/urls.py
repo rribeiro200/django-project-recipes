@@ -5,6 +5,9 @@ from django.urls import include, path
 from .views import site
 from .views import api
 
+# JWT
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+
 # Rest Framework
 from rest_framework.routers import SimpleRouter
 
@@ -29,6 +32,11 @@ urlpatterns = [
     # Tag
     path('recipes/tags/<slug:slug>', site.RecipeListViewTag.as_view(), name='tags'),
     
+    # JWT Authentication
+    path('recipes/api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('recipes/api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('recipes/api/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+
     # API - V2
     path('recipes/api/v2/', include(recipe_api_v2_router.urls)),
     path('recipes/api/v2/tag/<int:pk>/', api.TagAPIV2Detail.as_view(), name='recipe_api_v2_tag'),
