@@ -23,5 +23,5 @@ urlpatterns = [
     # API - V2
     path('recipes/api/v2/', api.RecipeAPIV2List.as_view(), name='recipe_api_v2'),
     path('recipes/api/v2/<int:pk>/', api.RecipeAPIV2Detail.as_view(), name='recipe_api_v2_detail'),
-    path('recipes/api/v2/tag/<int:pk>/', api.tag_api_detail, name='recipe_api_v2_tag'),
+    path('recipes/api/v2/tag/<int:pk>/', api.TagAPIV2Detail.as_view(), name='recipe_api_v2_tag'),
 ]
