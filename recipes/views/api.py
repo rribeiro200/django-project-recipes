@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.viewsets import ModelViewSet
 
 # Models
 from ..models import Recipe
@@ -21,15 +22,8 @@ class RecipeAPIV2Pagination(PageNumberPagination):
     page_size = 5
 
 
-# Listagem e Criação
-class RecipeAPIV2List(ListCreateAPIView):
-    queryset = Recipe.my_manager.get_published()
-    serializer_class = RecipeSerializer
-    pagination_class = RecipeAPIV2Pagination
-
-
-# Detalhes
-class RecipeAPIV2Detail(RetrieveUpdateDestroyAPIView):
+# View Set - Listagem, Criação e Detalhes tudo junto
+class RecipeAPIv2ViewSet(ModelViewSet):
     queryset = Recipe.my_manager.get_published()
     serializer_class = RecipeSerializer
     pagination_class = RecipeAPIV2Pagination
