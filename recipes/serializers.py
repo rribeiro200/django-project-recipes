@@ -7,8 +7,7 @@ from authors.validators import AuthorRecipeValidator
 from rest_framework import serializers
 
 # Models
-from .models import Category, Recipe
-from django.contrib.auth.models import User
+from .models import Recipe
 from tag.models import Tag
 
 

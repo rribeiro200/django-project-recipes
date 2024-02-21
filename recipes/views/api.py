@@ -3,7 +3,6 @@ from django.shortcuts import get_object_or_404
 from ..permissions import IsOwner
 
 # Rest Framework
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
@@ -27,6 +26,7 @@ class RecipeAPIv2ViewSet(ModelViewSet):
     serializer_class = RecipeSerializer
     pagination_class = RecipeAPIV2Pagination
     permission_classes = [IsAuthenticatedOrReadOnly]
+    http_method_names = ['get', 'options', 'head', 'patch', 'post', 'delete']
 
     def get_object(self):
         pk = self.kwargs.get('pk', '')
