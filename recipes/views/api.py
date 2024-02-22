@@ -4,6 +4,7 @@ from ..permissions import IsOwner
 
 # Rest Framework
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
@@ -28,6 +29,7 @@ class RecipeAPIv2ViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     http_method_names = ['get', 'options', 'head', 'patch', 'post', 'delete']
 
+    # Lista
     def get_object(self):
         pk = self.kwargs.get('pk', '')
         obj = get_object_or_404(
@@ -39,20 +41,23 @@ class RecipeAPIv2ViewSet(ModelViewSet):
 
         return obj
     
+    # Permite
     def get_permissions(self):
         if self.request.method in ['PATCH', 'DELETE']:
             return [IsOwner(), ]
 
         return super().get_permissions()
     
+    # Cria
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(author=request.user)
         headers = self.get_success_headers(serializer.data)
 
-        return Response(serializer.data, headers=headers)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
     
+    # Atualiza
     def partial_update(self, request, *args, **kwargs):
         recipe = self.get_object()
         serializer = RecipeSerializer(

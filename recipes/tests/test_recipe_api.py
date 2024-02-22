@@ -36,6 +36,20 @@ class RecipeAPIv2Test(test.APITestCase, RecipeMixin):
         return response.data.get('access') # type: ignore
     
 
+    def get_recipe_raw_data(self):
+        data = {
+            'title': 'This is the title',
+            'description': 'This is the description',
+            'preparation_time': 1,
+            'preparation_time_unit': 'Minutes',
+            'servings': 1,
+            'servings_unit': 'Porções',
+            'preparation_steps': 'This is the preparation steps',
+        }
+
+        return data
+
+
     def test_recipe_api_list_returns_status_code_200(self):
         response = self.get_recipe_api_list()
         self.assertEqual(
@@ -116,3 +130,21 @@ class RecipeAPIv2Test(test.APITestCase, RecipeMixin):
 
     def test_jwt_login(self):
         jwt = self.get_jwt_access_token()
+
+
+    def test_recipe_api_list_logged_user_can_create_a_recipe(self):
+        # Ajustes
+        data = self.get_recipe_raw_data()
+
+        # Ação
+        response = self.client.post(
+            self.get_recipe_reverse_url(),
+            data=data,
+            HTTP_AUTHORIZATION=f'Bearer {self.get_jwt_access_token()}'
+        )
+
+        # Asserção
+        self.assertEqual(
+            response.status_code,
+            201
+        )
