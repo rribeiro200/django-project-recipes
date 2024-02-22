@@ -32,6 +32,7 @@ class RecipeAPIv2TestMixin(RecipeMixin):
             password=userdata.get('password') # type: ignore
         )
 
+        # Cria o token para o usuário
         response = self.client.post(reverse('recipes:token_obtain_pair'), data={**userdata}) # type: ignore
         
         return {
@@ -135,14 +136,10 @@ class RecipeAPIv2Test(test.APITestCase, RecipeAPIv2TestMixin):
         )
 
 
-    def test_jwt_login(self):
-        jwt = self.get_auth_data()
-
-
     def test_recipe_api_list_logged_user_can_create_a_recipe(self):
         # Ajustes
         recipe_raw_data = self.get_recipe_raw_data()
-        auth_data = self.get_auth_data()
+        auth_data = self.get_auth_data(username='rafael-ribeiro')
         jwt_acess_token = auth_data.get('jwt_access_token')
 
         # Ação
@@ -170,7 +167,7 @@ class RecipeAPIv2Test(test.APITestCase, RecipeAPIv2TestMixin):
         recipe.author = author
         recipe.save()
 
-        wanted_new_title = f'The new title updated by {author.username}'
+        wanted_new_title = f'The new title updated by {author.username}' # type:ignore
 
         # Ação
         response = self.client.patch(
@@ -183,7 +180,7 @@ class RecipeAPIv2Test(test.APITestCase, RecipeAPIv2TestMixin):
 
         # Asserção
         self.assertEqual(
-            response.data.get('title'),
+            response.data.get('title'), # type: ignore
             wanted_new_title
         )
 
