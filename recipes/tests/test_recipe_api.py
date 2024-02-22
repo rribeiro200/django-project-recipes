@@ -4,7 +4,7 @@ from unittest.mock import patch
 from django.urls import reverse
 # Rest Framework
 from rest_framework import test
-# Mixin
+# Mixins
 from recipes.tests.test_recipe_base import RecipeMixin
 
 
@@ -19,7 +19,22 @@ class RecipeAPIv2Test(test.APITestCase, RecipeMixin):
         response = self.client.get(self.get_recipe_reverse_url(reverse_result))
 
         return response
+    
 
+    def get_jwt_access_token(self):
+        userdata = {
+            "username": "user",
+            "password": "password"
+        }
+        author = self.make_author(
+            username=userdata.get('username'), # type: ignore
+            password=userdata.get('password') # type: ignore
+        )
+
+        response = self.client.post(reverse('recipes:token_obtain_pair'), data={**userdata}) # type: ignore
+        
+        return response.data.get('access') # type: ignore
+    
 
     def test_recipe_api_list_returns_status_code_200(self):
         response = self.get_recipe_api_list()
@@ -37,7 +52,7 @@ class RecipeAPIv2Test(test.APITestCase, RecipeMixin):
         response = self.client.get(
             reverse('recipes:recipes-api-list') + '?page=1'
         )
-        qtd_of_loaded_recipes = len(response.data.get('results'))
+        qtd_of_loaded_recipes = len(response.data.get('results')) # type: ignore
 
         self.assertEqual(
             wanted_number_of_recipes,
@@ -52,7 +67,7 @@ class RecipeAPIv2Test(test.APITestCase, RecipeMixin):
         recipe_not_published.save()
         response = self.get_recipe_api_list()
         self.assertEqual(
-            len(response.data.get('results')),
+            len(response.data.get('results')), # type: ignore
             1
         )
 
@@ -97,3 +112,7 @@ class RecipeAPIv2Test(test.APITestCase, RecipeMixin):
             response.status_code,
             401
         )
+
+
+    def test_jwt_login(self):
+        jwt = self.get_jwt_access_token()

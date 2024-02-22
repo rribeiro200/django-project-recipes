@@ -1,6 +1,8 @@
 from django.test import TestCase
 from recipes.models import Category, Recipe, User
 
+
+
 class RecipeMixin:
     def make_category(self, name='Category'):
         return Category.objects.create(name=name)
@@ -48,6 +50,8 @@ class RecipeMixin:
             recipes.append(recipe)
 
         return recipes
+
+
 
 class RecipeTestBase(TestCase, RecipeMixin):
     def setUp(self) -> None:
